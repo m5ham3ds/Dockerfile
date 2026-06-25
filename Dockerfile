@@ -8,10 +8,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# نسخ ملف المتطلبات (بدون إصدارات ثابتة لضمان التوافق)
-COPY requirements.txt .
-
-# تثبيت أحدث الإصدارات المتوافقة مع حل التبعيات
+# تثبيت أحدث الإصدارات المتوافقة من مكتبات Python
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir --upgrade \
         gradio \
@@ -27,7 +24,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
         pydub \
         pydantic
 
-# نسخ باقي الملفات
+# نسخ باقي ملفات المشروع (بما فيها app.py)
 COPY . .
 
 # منفذ التشغيل
