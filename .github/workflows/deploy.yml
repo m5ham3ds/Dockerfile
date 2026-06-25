@@ -1,0 +1,26 @@
+name: Build and Deploy to Hugging Face Space
+
+on:
+  push:
+    branches: [ main ]  # أو الفرع الذي تعمل عليه
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Hugging Face Space Registry
+        run: echo "${{ secrets.HF_TOKEN }}" | docker login registry.hf.space -u ${{ secrets.HF_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t registry.hf.space/${{ secrets.HF_USERNAME }}/${{ secrets.HF_SPACE_NAME }}:latest .
+
+      - name: Push Docker image to Hugging Face Space
+        run: |
+          docker push registry.hf.space/${{ secrets.HF_USERNAME }}/${{ secrets.HF_SPACE_NAME }}:latest
